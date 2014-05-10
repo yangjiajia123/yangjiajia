@@ -42,10 +42,11 @@
 int main(int argc, char **argv)
 {
 	int i;
-
+    
 	for (i=0; i<5; i++)
 	{
 		printf("Hello Yangjiajia !!\n");
+		printf("Nice to meet you !!\n");
 	}
 
 	return 0;
