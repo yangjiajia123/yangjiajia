@@ -1,53 +1,52 @@
-/*
-****************************************Copyright (c)**************************************************
-**                               Guangzhou Zhiyuan Electronic Co.,LTD.
-**                                     graduate school
-**                                 http://www.zyinside.com
-**
-**------------------------------------- File Info ------------------------------------------------------
-** File name:           hello.c
-** Last modified Date:  2005-12-29
-** Last Version:        1.0
-** Descriptions:        HelloWorld program.
-**------------------------------------------------------------------------------------------------------
-** Created by:          Chenxibing
-** Created date:        2005-12-29
-** Version:             1.0
-** Descriptions:        Preliminary version.
-**
-**------------------------------------------------------------------------------------------------------
-** Modified by:
-** Modified date:
-** Version:
-** Descriptions:
-**
-********************************************************************************************************
-*/
-#include <stdio.h>
+#include<stdio.h>
+#include<signal.h>
+#include<sys/time.h>
 
-/*
-*******************************************************************************************************
-** Function name: main()
-** Descriptions	: printf "HelloWorld" on srceen.
-** Input	: NONE
-** Output	: NONE
-** Created by	: Chenxibing
-** Created Date	: 2005-12-29
-**-----------------------------------------------------------------------------------------------------
-** Modified by	:
-** Modified Date: 
-**-----------------------------------------------------------------------------------------------------
-*******************************************************************************************************
-*/
-int main(int argc, char **argv)
+int limit = 10;
+void timeout_info(int signo)
 {
-	int i;
-
-	for (i=0; i<5; i++)
-	{
-		printf("Hello Yangjiajia !!\n");
-	}
-
-	return 0;
+    if(limit == 0)
+    {
+         printf("jiajia: sorry,time limit reached.\n");
+         exit(0);
+    }
+    printf("jiajia: only %d senconds left.\n",limit--);
 }
 
+void init_sigaction (void)
+{
+    struct sigaction act;
+    
+    act.sa_handler = timeout_info;
+    act.sa_flags = 0;
+    sigemptyset(&act.sa_mask);
+    sigaction(SIGPROF,&act,NULL);
+}
+
+void init_time(void)
+{
+     struct itimerval val;
+     
+     val.it_value.tv_sec = 1;
+     val.it_value.tv_usec = 0;
+     val.it_interval = val.it_value;
+     setitimer(ITIMER_PROF,&val,NULL);
+}
+
+int main(void)
+{
+    char *str;
+    char c;
+    
+    printf("Hello Yangjiajia !!\n");
+	printf("Nice to meet you !!\n");
+	
+    init_sigaction();
+    init_time();
+    printf("jiajia: You have only 10 seconds for thinking.\n");
+
+    
+    while(1);
+    exit(0);
+}
+    
